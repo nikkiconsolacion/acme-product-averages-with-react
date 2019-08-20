@@ -47,16 +47,29 @@
         );
       }
 
-      const Products = ({ products })=> {
+      const Products = ({ products, offerings, companies })=> {
+        const processed = products.map( product => {
+          const _offerings = offerings.filter( offering => offering.productId === product.id);
+          return {...product, offerings: _offerings }
+        });
+        console.log('processed', processed)
+
         return (
           <div>
             <h2>Products</h2>
             <ul>
               {
-                products.map( product => <li key={ product.id }>
-                  <div><b>Product:</b> { product.name }</div>
-                  <div><b>Suggested Price:</b> { product.suggestedPrice }</div>
-                  <hr />
+                processed.map( _product =>
+                  <li key={
+                    _product.id }>
+                    <div><b>Product:</b> { _product.name }</div>
+                    <div><b>Suggested Price:</b> { _product.suggestedPrice }</div>
+                    <div><b>Average Price:</b> {
+                      (_product.offerings.map( offering => offering.price)
+                        .reduce((acc, curr)=> acc + curr) / _product.offerings.length).toFixed(2)
+
+                    } </div>
+                    <hr />
                   </li>)
               }
             </ul>
@@ -69,6 +82,8 @@
           super();
           this.state = {
             products: [],
+            offerings: [],
+            companies: []
           };
         }
         async componentDidMount(){
@@ -79,16 +94,16 @@
           ];
           const responses = await Promise.all(urls.map( url => axios.get(url)));
           const [ products, offerings, companies ] = responses.map(response => response.data)
-          this.setState({ products })
+          this.setState({ products, offerings, companies })
         }
         render(){
-          const { products } = this.state;
+          const { products, offerings, companies } = this.state;
           return (
             <HashRouter>
               <Route render={ ()=> <Nav products={ products } /> } />
               <Switch>
                 <Route exact path='/' render={ ()=> <Home products={ products } /> } />
-                <Route path='/products' render={ ()=> <Products products={ products } /> } />
+                <Route path='/products' render={ ()=> <Products products={ products } offerings={ offerings } companies={ companies } /> } />
               </Switch>
             </HashRouter>
           )
