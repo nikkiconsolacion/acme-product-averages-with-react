@@ -50,7 +50,7 @@
       const Products = ({ products, offerings, companies })=> {
         const processed = products.map( product => {
           const _offerings = offerings.filter( offering => offering.productId === product.id);
-          const _companies = _offerings.map( _offering => companies.filter( company => company.id === _offering.companyId));
+          const _companies = _offerings.map( _offering => companies.find( company => company.id === _offering.companyId));
           return {...product, offerings: _offerings, companies: _companies };
         });
         console.log('processed', processed)
