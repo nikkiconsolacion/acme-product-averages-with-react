@@ -13,6 +13,10 @@
         display: flex;
         justify-content: space-around;
       }
+      li {
+        list-style: none;
+      }
+
     </style>
   </head>
   <body>
@@ -43,6 +47,23 @@
         );
       }
 
+      const Products = ({ products })=> {
+        return (
+          <div>
+            <h2>Products</h2>
+            <ul>
+              {
+                products.map( product => <li key={ product.id }>
+                  <div><b>Product:</b> { product.name }</div>
+                  <div><b>Suggested Price:</b> { product.suggestedPrice }</div>
+                  <hr />
+                  </li>)
+              }
+            </ul>
+          </div>
+        )
+      }
+
       class App extends Component{
         constructor(){
           super();
@@ -67,6 +88,7 @@
               <Route render={ ()=> <Nav products={ products } /> } />
               <Switch>
                 <Route exact path='/' render={ ()=> <Home products={ products } /> } />
+                <Route path='/products' render={ ()=> <Products products={ products } /> } />
               </Switch>
             </HashRouter>
           )
