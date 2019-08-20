@@ -59,13 +59,11 @@
           const lowestPrice = _offerings.map( offering => offering.price)
             .reduce((acc, curr)=> curr < acc ? curr : acc);
 
-          // const lowestPriceOfferedBy = _companies.map( company => {
-          //             const _offering = _offerings.find( offering => lowestPrice === offering.price)
-          //             const _company = _companies.find( company => _offering.companyId === company.id)
-          //             return _company.name
-          // })
+          const lowestPriceOfferedBy = _offerings.find( offering => lowestPrice === offering.price)
 
-          return {...product, offerings: _offerings, companies: _companies, averagePrice, lowestPrice };
+          const companyName = _companies.find( company => lowestPriceOfferedBy.companyId === company.id)
+
+          return {...product, offerings: _offerings, companies: _companies, averagePrice, lowestPrice, lowestPriceOfferedBy, companyName };
         });
         console.log('processed', processed)
 
@@ -81,10 +79,7 @@
                     <div><b>Product:</b> { _product.name }</div>
                     <div><b>Suggested Price:</b> { _product.suggestedPrice }</div>
                     <div><b>Average Price:</b> { _product.averagePrice }</div>
-                    <div>
-                    </div><b>Lowest Price:</b> { _product.lowestPrice } offered by {
-
-                    }
+                    <div><b>Lowest Price:</b> { _product.lowestPrice } offered by { _product.companyName.name }</div>
                     <hr />
                   </li>)
               }
