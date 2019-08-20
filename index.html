@@ -38,7 +38,6 @@
       }
 
       const Home = ({ products })=> {
-        console.log(products)
         return (
           <div>
             <h2>Home</h2>
@@ -50,10 +49,26 @@
       const Products = ({ products, offerings, companies })=> {
         const processed = products.map( product => {
           const _offerings = offerings.filter( offering => offering.productId === product.id);
-          const _companies = _offerings.map( _offering => companies.find( company => company.id === _offering.companyId));
-          return {...product, offerings: _offerings, companies: _companies };
+
+          const _companies = _offerings.map( _offering =>
+            companies.find( company => company.id === _offering.companyId));
+
+          const averagePrice = (_offerings.map( offering => offering.price)
+            .reduce((acc, curr)=> acc + curr) / _offerings.length).toFixed(2)*1;
+
+          const lowestPrice = _offerings.map( offering => offering.price)
+            .reduce((acc, curr)=> curr < acc ? curr : acc);
+
+          // const lowestPriceOfferedBy = _companies.map( company => {
+          //             const _offering = _offerings.find( offering => lowestPrice === offering.price)
+          //             const _company = _companies.find( company => _offering.companyId === company.id)
+          //             return _company.name
+          // })
+
+          return {...product, offerings: _offerings, companies: _companies, averagePrice, lowestPrice };
         });
         console.log('processed', processed)
+
 
         return (
           <div>
@@ -65,16 +80,9 @@
                     _product.id }>
                     <div><b>Product:</b> { _product.name }</div>
                     <div><b>Suggested Price:</b> { _product.suggestedPrice }</div>
-                    <div><b>Average Price:</b> {
-                      (_product.offerings.map( offering => offering.price)
-                        .reduce((acc, curr)=> acc + curr) / _product.offerings.length).toFixed(2)
-                      }
-                    </div>
+                    <div><b>Average Price:</b> { _product.averagePrice }</div>
                     <div>
-                    </div><b>Lowest Price:</b> {
-                      _product.offerings.map( offering => offering.price)
-                        .reduce((acc, curr)=> curr < acc ? curr : acc)
-                    } offered by {
+                    </div><b>Lowest Price:</b> { _product.lowestPrice } offered by {
 
                     }
                     <hr />
