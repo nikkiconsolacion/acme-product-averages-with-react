@@ -50,7 +50,8 @@
       const Products = ({ products, offerings, companies })=> {
         const processed = products.map( product => {
           const _offerings = offerings.filter( offering => offering.productId === product.id);
-          return {...product, offerings: _offerings };
+          const _companies = _offerings.map( _offering => companies.filter( company => company.id === _offering.companyId));
+          return {...product, offerings: _offerings, companies: _companies };
         });
         console.log('processed', processed)
 
@@ -73,6 +74,8 @@
                     </div><b>Lowest Price:</b> {
                       _product.offerings.map( offering => offering.price)
                         .reduce((acc, curr)=> curr < acc ? curr : acc)
+                    } offered by {
+
                     }
                     <hr />
                   </li>)
