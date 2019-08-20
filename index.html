@@ -16,8 +16,28 @@
       const { render } = ReactDOM;
       const { HashRouter, Route, Switch, Link, Redirect } = ReactRouterDOM;
 
+      class App extends Component{
+        constructor(){
+          super();
+          this.state = {
 
-
+          };
+        }
+        async componentDidMount(){
+          const urls = [
+            'https://acme-users-api-rev.herokuapp.com/api/products',
+            'https://acme-users-api-rev.herokuapp.com/api/offerings',
+            'https://acme-users-api-rev.herokuapp.com/api/companies'
+          ];
+          const responses = await Promise.all(urls.map( url => axios.get(url)));
+          const [ products, offerings, companies ] = responses.map(response => response.data)
+          console.log('products', products)
+        }
+        render(){
+          return <hr />
+        }
+      }
+      render(<App />, root);
     </script>
   </body>
 </html>
