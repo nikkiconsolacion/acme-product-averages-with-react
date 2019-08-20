@@ -50,7 +50,7 @@
       const Products = ({ products, offerings, companies })=> {
         const processed = products.map( product => {
           const _offerings = offerings.filter( offering => offering.productId === product.id);
-          return {...product, offerings: _offerings }
+          return {...product, offerings: _offerings };
         });
         console.log('processed', processed)
 
@@ -67,8 +67,13 @@
                     <div><b>Average Price:</b> {
                       (_product.offerings.map( offering => offering.price)
                         .reduce((acc, curr)=> acc + curr) / _product.offerings.length).toFixed(2)
-
-                    } </div>
+                      }
+                    </div>
+                    <div>
+                    </div><b>Lowest Price:</b> {
+                      _product.offerings.map( offering => offering.price)
+                        .reduce((acc, curr)=> curr < acc ? curr : acc)
+                    }
                     <hr />
                   </li>)
               }
