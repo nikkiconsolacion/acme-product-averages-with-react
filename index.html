@@ -13,8 +13,14 @@
         display: flex;
         justify-content: space-around;
       }
+      a {
+        padding: 1rem;
+      }
       li {
         list-style: none;
+      }
+      .selected {
+        border: solid 1px black;
       }
 
     </style>
@@ -37,16 +43,30 @@
         )
       }
 
-      const Home = ({ products })=> {
+      const Home = ({ products, offerings })=> {
+        const processed = products.map( product => {
+          const _offerings = offerings.filter( offering => offering.productId === product.id);
+          const averagePrice = (_offerings.map( offering => offering.price )
+            .reduce((acc, curr)=> acc + curr)) / _offerings.length
+          return {...product, averagePrice}
+        })
+        console.log('home processed', processed)
+        console.log('products', products)
+
+
+        //const _averagePrice = (processed.map( product => product.averagePrice).reduce((acc, curr)=> acc + curr)) / products.length
+        //console.log(processed.map(product => product.averagePrice).reduce((acc, curr)=> acc + curr))
         return (
           <div>
             <h2>Home</h2>
-            <p>We have { products.length } products with an average price of </p>
+            <p>We have { products.length } products with an average price of { (processed.map(product => product.averagePrice).reduce((acc, curr)=> acc + curr ,0) / products.length).toFixed(2) }
+            </p>
           </div>
         );
       }
 
       const Products = ({ products, offerings, companies })=> {
+
         const processed = products.map( product => {
           const _offerings = offerings.filter( offering => offering.productId === product.id);
 
@@ -66,7 +86,6 @@
           return {...product, offerings: _offerings, companies: _companies, averagePrice, lowestPrice, lowestPriceOfferedBy, companyName };
         });
         console.log('processed', processed)
-
 
         return (
           <div>
@@ -113,7 +132,7 @@
             <HashRouter>
               <Route render={ ()=> <Nav products={ products } /> } />
               <Switch>
-                <Route exact path='/' render={ ()=> <Home products={ products } /> } />
+                <Route exact path='/' render={ ()=> <Home products={ products } offerings={ offerings } /> } />
                 <Route path='/products' render={ ()=> <Products products={ products } offerings={ offerings } companies={ companies } /> } />
               </Switch>
             </HashRouter>
